@@ -107,7 +107,7 @@ export default {
         'Lakukan tes pengambilan untuk memeriksa apakah RAGFlow dapat memulihkan konten yang diinginkan untuk LLM. ',
       similarityThreshold: 'Similarity threshold',
       similarityThresholdTip:
-        'Kami menggunakan skor kesamaan hibrida untuk mengevaluasi jarak antara dua baris teks. Ini adalah kesamaan kata kunci berbobot dan kesamaan kosinus vektor. Jika kesamaan antara kueri dan potongan kurang dari ambang ini, potongan akan disaring.',
+        'Kami menggunakan skor kesamaan hibrida untuk mengevaluasi jarak antara dua baris teks. Ini adalah kesamaan kata kunci berbobot dan kesamaan kosinus vektor. Jika kesamaan antara kueri dan potongan kurang dari ambang ini, potongan akan disaring. Secara default, ambang batas diatur ke 0,2. Itu berarti hanya potongan dengan skor kemiripan hibrida 20 atau lebih tinggi yang akan diambil.',
       vectorSimilarityWeight: 'Bobot kesamaan kata kunci',
       vectorSimilarityWeightTip:
         'Kami menggunakan skor kesamaan hibrida untuk mengevaluasi jarak antara dua baris teks. Ini adalah kesamaan kata kunci berbobot dan kesamaan kosinus vektor atau skor rerank (0~1). Jumlah dari kedua bobot adalah 1.0.',
@@ -156,7 +156,7 @@ export default {
       rerankTip: `Jika kosong. Ini menggunakan embedding dari kueri dan potongan untuk menghitung kesamaan kosinus vektor. Jika tidak, ini menggunakan skor rerank sebagai pengganti kesamaan kosinus vektor.`,
       topK: 'Top-K',
       topKTip: `K potongan akan dimasukkan ke dalam model rerank.`,
-      delimiter: `Pembatas`,
+      delimiter: `Pemisah untuk segmentasi teks`,
       html4excel: 'Excel ke HTML',
       html4excelTip: `Excel akan diparsing menjadi tabel HTML atau tidak. Jika FALSE, setiap baris di Excel akan dibentuk sebagai potongan.`,
     },
@@ -171,14 +171,14 @@ export default {
       languagePlaceholder: 'Silakan masukkan bahasa Anda!',
       permissions: 'Izin',
       embeddingModel: 'Model embedding',
-      chunkTokenNumber: 'Jumlah token potongan',
+      chunkTokenNumber: 'Ukuran potongan yang disarankan',
       chunkTokenNumberMessage: 'Jumlah token potongan diperlukan',
       embeddingModelTip:
         'Model embedding yang digunakan untuk embedding potongan. Tidak dapat diubah setelah basis pengetahuan memiliki potongan. Anda perlu menghapus semua potongan jika ingin mengubahnya.',
       permissionsTip:
         "Jika izinnya 'Tim', semua anggota tim dapat memanipulasi basis pengetahuan.",
       chunkTokenNumberTip:
-        'Ini menentukan jumlah token dari sebuah potongan secara kira-kira.',
+        'Ini menentukan jumlah token dari sebuah potongan secara kira-kira. Tidak ada blok baru yang akan dibuat kecuali jika sebuah pembatas ditemukan, bahkan jika ambang batas ini dilampaui.',
       chunkMethod: 'Metode potongan',
       chunkMethodTip: 'Instruksi ada di sebelah kanan.',
       upload: 'Unggah',
@@ -291,7 +291,7 @@ export default {
       useRaptorTip:
         'Pemrosesan Abstraktif Rekursif untuk Pengambilan Terorganisasi Pohon, silakan merujuk ke https://huggingface.co/papers/2401.18059',
       prompt: 'Prompt',
-      promptTip: 'Prompt LLM yang digunakan untuk merangkas.',
+      promptTip: 'Gunakan prompt sistem untuk menjelaskan tugas untuk LLM, tentukan bagaimana harus merespons, dan menguraikan persyaratan lainnya. Prompt sistem sering digunakan bersama dengan kunci (variabel), yang berfungsi sebagai berbagai input data untuk LLM. Gunakan garis miring `/` atau tombol (x) untuk menampilkan kunci yang digunakan.',
       promptMessage: 'Prompt diperlukan',
       promptText: `Silakan rangkum paragraf berikut. Berhati-hatilah dengan angka, jangan membuat hal-hal yang tidak ada. Paragraf sebagai berikut:
           {cluster_content}
@@ -515,18 +515,18 @@ export default {
         'Model LLM obrolan default yang akan digunakan semua basis pengetahuan baru yang dibuat.',
       embeddingModel: 'Model Embedding',
       embeddingModelTip:
-        'Model embedding default yang akan digunakan semua basis pengetahuan baru yang dibuat.',
+        'Model embedding default untuk setiap basis pengetahuan baru yang dibuat. Jika Anda tidak dapat menemukan model embedding dari dropdown, periksa apakah Anda menggunakan RAGFlow slim edition (yang tidak menyertakan model embedding) atau periksa https://ragflow.io/docs/dev/supported_models untuk melihat apakah penyedia model Anda mendukung model ini.',
       img2txtModel: 'Model Img2txt',
       img2txtModelTip:
-        'Model multi-modul default yang akan digunakan semua basis pengetahuan baru yang dibuat. Ini dapat menggambarkan gambar atau video.',
+        'Model img2txt default untuk setiap basis pengetahuan yang baru dibuat. Model ini menggambarkan gambar atau video. Jika Anda tidak dapat menemukan model dari menu dropdown, periksa https://ragflow.io/docs/dev/supported_models untuk melihat apakah penyedia model Anda mendukung model ini.',
       sequence2txtModel: 'Model Speech2txt',
       sequence2txtModelTip:
-        'Model ASR default yang akan digunakan semua basis pengetahuan baru yang dibuat. Gunakan model ini untuk menerjemahkan suara ke teks yang sesuai.',
+        'Model ASR default yang akan digunakan semua basis pengetahuan baru yang dibuat. Gunakan model ini untuk menerjemahkan suara ke teks yang sesuai. Jika Anda tidak dapat menemukan model dari menu dropdown, periksa https://ragflow.io/docs/dev/supported_models untuk melihat apakah penyedia model Anda mendukung model ini.',
       rerankModel: 'Model Rerank',
-      rerankModelTip: `Model rerank default digunakan untuk mererank potongan yang diambil oleh pertanyaan pengguna.`,
+      rerankModelTip: `Model rerank default untuk reranking potongan teks. Jika Anda tidak dapat menemukan model dari dropdown, periksa https://ragflow.io/docs/dev/supported_models untuk melihat apakah penyedia model Anda mendukung model ini.`,
       ttsModel: 'Model TTS',
       ttsModelTip:
-        'Model TTS default akan digunakan untuk menghasilkan ucapan selama percakapan atas permintaan.',
+        'Model text-to-speech default. Jika Anda tidak dapat menemukan model dari dropdown, periksa https://ragflow.io/docs/dev/supported_models untuk melihat apakah penyedia model Anda mendukung model ini.',
       workspace: 'Ruang Kerja',
       upgrade: 'Tingkatkan',
       addLlmTitle: 'Tambahkan LLM',
